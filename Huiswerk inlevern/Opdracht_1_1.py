@@ -7,7 +7,7 @@ def convert_time(u,m,s):
     totaal_seconden += m*60
     totaal_seconden += s
     return totaal_seconden
-
+    
 def invers_convert_time(s):
     '''time is een array met u m en s als elementen'''
     time = [0,0,0] 
