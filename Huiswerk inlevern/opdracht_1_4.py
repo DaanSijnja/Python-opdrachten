@@ -5,9 +5,9 @@ import requests
 def jaar():
     '''Vraag om het jaartal'''
     var = int(input('Voer het jaar in YYYY:'))
-    if(var < 1998 or var > 2021):
-        #Er mag een jaartal tussen 1998 en 2021 ingevoerd worden
-        print('Ongeldig jaar. Voer een getal tussen 1998 en 2021 in')
+    if(var < 1970 or var > 2021):
+        #Er mag een jaartal tussen 1970 en 2021 ingevoerd worden
+        print('Ongeldig jaar. Voer een getal tussen 1970 en 2021 in')
         #stel de vraag nog een keer
         return jaar()
     else:
@@ -45,11 +45,30 @@ def dag(maand):
     else:
         return var
 
-#startdatum array: Jaar : Maand : Dag
-start_datum = [0,0,0]
-#startdatum array: Jaar : Maand : Dag
-end_datum = [0,0,0]
+def datum_to_sting(datum):
+    '''convert de datum array naar een string'''
+    #jaartal naar string
+    datum_string = str(datum[0])
 
+    if(datum[1] < 10):
+        #check of het getal kleiner is dan tien want dan moet er een nul voor
+        datum_string += '0' + str(datum[1])
+    else:
+        datum_string += str(datum[1])
+
+    if(datum[2] < 10):
+        #check of het getal kleiner is dan tien want dan moet er een nul voor
+        datum_string += '0' + str(datum[2])
+    else:
+        datum_string += str(datum[2])
+
+    return datum_string
+
+#start datum array: Jaar : Maand : Dag
+start_datum = [0,0,0]
+
+#eind datum array: Jaar : Maand : Dag
+end_datum = [0,0,0]
 
 print('Voer de start datum in:')
 #input start datum
@@ -57,15 +76,13 @@ start_datum[0] = jaar()
 start_datum[1] = maand()
 start_datum[2] = dag(start_datum[1])
 
-#input eind datum
-
 print('Voer de eind datum in:')
-#input start datum
+#input eind datum
 end_datum[0] = jaar()
 
 while(end_datum[0] < start_datum[0]):
     #eind jaar mag niet kleiner zijn dan de start jaar
-    print('eind jaar mag niet kleiner zijn dan het start jaar')
+    print('Eind jaar mag niet kleiner zijn dan het start jaar')
     end_datum[0] = jaar()
 
 end_datum[1] = maand()
@@ -77,31 +94,38 @@ if(end_datum[0] == start_datum[0]):
         print('eind maand mag niet kleiner zijn dan de start maand')
         end_datum[1] = maand()
 
-end_datum[2] = dag(start_datum[1])
+end_datum[2] = dag(end_datum[1])
 
 if(end_datum[0] == start_datum[0] and end_datum[1] == end_datum[1]):
     #check of het eind jaar het zelfde is al het start jaar en of de eind maand het zelfde is als de start maand
     while(end_datum[2] < start_datum[2]):
         #eind dag mag niet kleiner zijn als de start dag
         print('eind dag mag niet kleiner zijn dan de start dag')
-        end_datum[2] = dag(start_datum[1])
+        end_datum[2] = dag(end_datum[1])
 
+#print de datum nogmaals
+print('Start datum:',start_datum[0], start_datum[1], start_datum[2])
+print('Eind datum:',end_datum[0], end_datum[1], end_datum[2])
 
-print(start_datum,end_datum)
+#convert de datums naar strings
+start_string = datum_to_sting(start_datum)
+end_string = datum_to_sting(end_datum)
 
-
-'''
-res = requests.get('https://www.daggegevens.knmi.nl/klimatologie/uurgegevens',params={"start":start_datum,"end":end_datum,"stns":"344","vars":"T","fmt":"json"})
+#request naar de API om de Tempratuur te sturen van de gegeven data
+res = requests.get('https://www.daggegevens.knmi.nl/klimatologie/uurgegevens',params={"start":start_string,"end":end_string,"stns":"344","vars":"T","fmt":"json"})
 data = res.json()
 
 i = 0
+#sum_temp is alle tempraturen bij elkaar opgetelt
 sum_temp = 0
 gem_temp = 0
 
 for i in range(len(data)):
     sum_temp += data[i]["T"]
-gem_temp = sum_temp/i
 
+if(i == 0):
+    sum_temp += data[0]["T"]
 
-print(gem_temp/10)
-'''
+gem_temp = sum_temp/(i+1)
+print('totaal dagen', len(data)/24)
+print('Gemiddelde temperatuur:',round(gem_temp/10,1), 'graden')
