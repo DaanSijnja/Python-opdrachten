@@ -1,6 +1,12 @@
 '''Waarheidstabel'''
 import operator as op
 
+def nand(x1,x2):
+    return(op.not_(op.and_(x1,x2)))
+
+def nor(x1,x2):
+    return(op.not_(op.or_(x1,x2)))
+
 def waarheid(p):
     '''waarheidstabel geprint'''
     print(str(p))
@@ -17,12 +23,13 @@ def waarheid_fruitfull(p):
     
     return result
 
-
 ''''print or_ and_ en xor'''
 waarheid(op.or_)
 waarheid(op.and_)
 waarheid(op.xor)
 
-print(waarheid_fruitfull(op.xor))
-
-
+print('or: ',waarheid_fruitfull(op.or_))
+print('and: ',waarheid_fruitfull(op.and_))
+print('xor: ',waarheid_fruitfull(op.xor))
+print('nand: ',waarheid_fruitfull(nand))
+print('nor: ',waarheid_fruitfull(nor))
