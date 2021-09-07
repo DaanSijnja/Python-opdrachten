@@ -1,4 +1,4 @@
-'''API van de KNMI'''
+'''API van de KNMI Door Daan Sijnja 20177747'''
 import requests
 from requests.models import REDIRECT_STATI, Response
 
@@ -168,4 +168,3 @@ if(hasFailed == False):
     print('totaal dagen', len(data)/24)
     #nog delen door tien omdat je een heel getal krijgt
     print('Gemiddelde temperatuur:',round(gem_temp/10,1), 'graden')
-

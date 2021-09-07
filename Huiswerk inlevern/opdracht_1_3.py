@@ -1,4 +1,4 @@
-'''Waarheidstabel'''
+'''Waarheidstabel Door Daan Sijnja 20177747'''
 import operator as op
 
 def nand(x1,x2):

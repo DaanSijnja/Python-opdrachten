@@ -1,4 +1,4 @@
-'''Radialen naar dergees en andersom'''
+'''Radialen naar dergees en andersom Door Daan Sijnja 20177747'''
 
 pi = 3.141592
 

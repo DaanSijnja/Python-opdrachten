@@ -1,4 +1,4 @@
-'''Tijdconversie Opdracht 1 A en B'''
+'''Tijdconversie Opdracht 1 A en B Door Daan Sijnja 20177747'''
 
 def convert_time(u,m,s):
     '''u is in uren. m is in minuten en s is in seconden'''
