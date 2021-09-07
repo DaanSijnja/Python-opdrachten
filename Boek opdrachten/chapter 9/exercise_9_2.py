@@ -11,8 +11,8 @@ for line in fin:
     aantal_woorden += 1
     woord = line.strip()
     j = 0
-    for i in range(len(woord)):
-        if(woord[i] == 'e'):
+    for i in range(len(woord)): #kan veel makkelijker met de 'in' operator
+        if(woord[i] == 'e'): 
             j = 1
             break
 
