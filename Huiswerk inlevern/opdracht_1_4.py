@@ -1,5 +1,6 @@
 '''API van de KNMI'''
 import requests
+from requests.models import REDIRECT_STATI, Response
 
 
 '''Dit had ook makkelijker gekunt met de datatime libary'''
@@ -112,26 +113,59 @@ print('Eind datum:',end_datum[0], end_datum[1], end_datum[2])
 start_string = datum_to_sting(start_datum)
 end_string = datum_to_sting(end_datum)
 
-#request naar de API om de Tempratuur te sturen van de gegeven data
-res = requests.get('https://www.daggegevens.knmi.nl/klimatologie/uurgegevens',params={"start":start_string,"end":end_string,"stns":"344","vars":"T","fmt":"json"})
-data = res.json()
+#bool om te bewaren of er iets mis is gegaan
+hasFailed = False
 
-i = 0
-#sum_temp is alle tempraturen bij elkaar opgetelt
-sum_temp = 0
-gem_temp = 0
+#try om er voor te zorgen dat er het programma niet vastloopt op een fout
+try:
+    #request naar de API om de Tempratuur te sturen van de gegeven data
+    res = requests.get('https://www.daggegevens.knmi.nl/klimatologie/uurgegevens',params={"start":start_string,"end":end_string,"stns":"344","vars":"T","fmt":"json"},timeout=0.0001)
+except requests.Timeout:
+    #Timeout error
+    print('Kon niet verbinden met de KMNI server, Probeer het later nog een keer. ERROR: TIMEOUT')
+    hasFailed = True
 
-#bereken de som
-for i in range(len(data)):
-    sum_temp += data[i]["T"]
+except requests.ConnectionError:
+    #Connection Error
+    print('Kon niet verbinden met de KMNI server, Probeer het later nog een keer. ERROR: CONNECTION')
+    hasFailed = True
+except requests.HTTPError:
+    #HTTPError
+    print('Kon niet verbinden met de KMNI server, Probeer het later nog een keer. ERROR: HTTP')
+    hasFailed = True
 
-#failsave
-if(i == 0):
-    sum_temp += data[0]["T"]
+except requests.TooManyRedirects:
+    #TMR error
+    print('Kon niet verbinden met de KMNI server, Probeer het later nog een keer. ERROR: TOOMANYREDIRECTS')
+    hasFailed = True
 
-#bereken het gemiddelde
-gem_temp = sum_temp/(i+1)
-#len(data) moet gedeelt worden door 24 want er wordt elk uur van een dag gestuurt
-print('totaal dagen', len(data)/24)
-#nog delen door tien omdat je een heel getal krijgt
-print('Gemiddelde temperatuur:',round(gem_temp/10,1), 'graden')
+#check of er niks gevaalt is
+if(hasFailed == False):
+    if(res.ok):
+        print('Request Status: OK')
+    else:
+        print('Request Status: Failed')
+
+
+    data = res.json()
+
+    i = 0
+    #sum_temp is alle tempraturen bij elkaar opgetelt
+    sum_temp = 0
+    gem_temp = 0
+
+    #bereken de som
+    for i in range(len(data)):
+        sum_temp += data[i]["T"]
+
+    #failsave
+    if(i == 0):
+        sum_temp += data[0]["T"]
+
+    #bereken het gemiddelde
+    gem_temp = sum_temp/(i+1)
+    #len(data) moet gedeelt worden door 24 want er wordt elk uur van een dag gestuurt
+    print('totaal dagen', len(data)/24)
+    #nog delen door tien omdat je een heel getal krijgt
+    print('Gemiddelde temperatuur:',round(gem_temp/10,1), 'graden')
+
