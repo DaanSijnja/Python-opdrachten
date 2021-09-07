@@ -2,6 +2,7 @@
 import requests
 
 
+'''Dit had ook makkelijker gekunt met de datatime libary'''
 def jaar():
     '''Vraag om het jaartal'''
     var = int(input('Voer het jaar in YYYY:'))
@@ -120,12 +121,17 @@ i = 0
 sum_temp = 0
 gem_temp = 0
 
+#bereken de som
 for i in range(len(data)):
     sum_temp += data[i]["T"]
 
+#failsave
 if(i == 0):
     sum_temp += data[0]["T"]
 
+#bereken het gemiddelde
 gem_temp = sum_temp/(i+1)
+#len(data) moet gedeelt worden door 24 want er wordt elk uur van een dag gestuurt
 print('totaal dagen', len(data)/24)
+#nog delen door tien omdat je een heel getal krijgt
 print('Gemiddelde temperatuur:',round(gem_temp/10,1), 'graden')
