@@ -18,6 +18,6 @@ def invers_convert_time(s):
     return time
 
 
-'''input is het zelfde als de output'''
+'''input is het zelfde als de output dus de twee functies zijn de inverse van elkaar'''
 
 print(invers_convert_time(convert_time(6,20,45)))

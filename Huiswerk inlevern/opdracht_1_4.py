@@ -119,7 +119,7 @@ hasFailed = False
 #try om er voor te zorgen dat er het programma niet vastloopt op een fout
 try:
     #request naar de API om de Tempratuur te sturen van de gegeven data
-    res = requests.get('https://www.daggegevens.knmi.nl/klimatologie/uurgegevens',params={"start":start_string,"end":end_string,"stns":"344","vars":"T","fmt":"json"},timeout=0.0001)
+    res = requests.get('https://www.daggegevens.knmi.nl/klimatologie/uurgegevens',params={"start":start_string,"end":end_string,"stns":"344","vars":"T","fmt":"json"},timeout=20)
 except requests.Timeout:
     #Timeout error
     print('Kon niet verbinden met de KMNI server, Probeer het later nog een keer. ERROR: TIMEOUT')
