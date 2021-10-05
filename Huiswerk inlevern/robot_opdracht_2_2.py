@@ -7,7 +7,7 @@ Creation date: 25/08/2021
 License: GNU General Public License (GNU GPLv3)
 """
 import math
-from typing import ForwardRef 
+import random
 
 class Robot:
     """Robot class for 2D robot objects."""
@@ -84,12 +84,62 @@ class Robot:
         return math.sqrt(diff_x**2 + diff_y**2)
 
 
+def distance_between_two_robots(r_1,r_2):
+ 
+    diff_x = r_1.get_x() - r_2.get_x()
+    diff_y = r_1.get_y() - r_2.get_y()
 
-robot_1 = Robot([0.0,5.0,0.0])
-robot_2 = Robot([0.0,0.0,0.0])
+    return math.sqrt(diff_x**2 + diff_y**2)
 
-print(robot_1.distance_to(robot_2))
-print(robot_2.distance_to(robot_1))
+def maak_robot_lijst(aantal_robots):
+    lijst = []
+
+    for i in range(aantal_robots):
+        robot_i = Robot()
+        lijst.append(robot_i)
+
+    return lijst
+
+def maak_grid(lijst,distance):
+    lengte_lijst = len(lijst)
+    lengte_zijde = math.ceil(math.sqrt(lengte_lijst))
+
+    for i in range(lengte_lijst):
+        for j in range(lengte_zijde):
+            index = (i * lengte_zijde + j)
+
+            if(index > (lengte_lijst-1)):
+                break
+
+            xpos = j * distance - ((lengte_zijde - 1) / 2) * distance 
+            ypos = ((lengte_zijde - 1 ) / 2 ) * distance - i * distance
+
+            lijst[index]._pose[0] = xpos
+            lijst[index]._pose[1] = ypos
+    
+    return lijst
+
+def random_offset(lijst,max_offset):
+    lengte_lijst = len(lijst)
+
+    for i in range(lengte_lijst):
+        rotatie = random.randrange(0,360)
+        offset = random.randrange(0,max_offset*10)/10
+        lijst[i].rotate(rotatie)
+        lijst[i].forward(offset)
+    
+    return lijst
+
+
+
+
+
+robot_lijst = maak_robot_lijst(16)
+robot_lijst = maak_grid(robot_lijst,4)
+robot_lijst = random_offset(robot_lijst,1)
+
+for i in range(len(robot_lijst)):
+    print(robot_lijst[i].get_location(), i + 1)
 
 
 
