@@ -6,8 +6,9 @@ Sciences.
 Creation date: 25/08/2021
 License: GNU General Public License (GNU GPLv3)
 """
-import math
+import math 
 import random
+import time
 
 class Robot:
     """Robot class for 2D robot objects."""
@@ -114,8 +115,8 @@ def maak_grid(lijst,distance):
             xpos = j * distance - ((lengte_zijde - 1) / 2) * distance 
             ypos = ((lengte_zijde - 1 ) / 2 ) * distance - i * distance
 
-            lijst[index]._pose[0] = xpos
-            lijst[index]._pose[1] = ypos
+            lijst[index]._pose[0] = round(xpos,1)
+            lijst[index]._pose[1] = round(ypos,1)
     
     return lijst
 
@@ -130,16 +131,43 @@ def random_offset(lijst,max_offset):
     
     return lijst
 
+def print_lijst(lijst,aantal = None):
+    lengte_lijst = len(lijst)
+
+    if(aantal == None or aantal > lengte_lijst):
+        aantal = lengte_lijst
+
+    for i in range(aantal):
+        print('x: ' + str(round(lijst[i].get_pose()[0],1)) ,'y: ' + str(round(lijst[i].get_pose()[1],1)),'d: ' + str(round(lijst[i].get_pose()[2],1)), ' robot: ', i + 1)
+
+def move_robots(lijst,distance, orientation):
+    lengte_lijst = len(lijst)
+
+    for i in range(lengte_lijst):
+        lijst[i].move(distance,orientation)
+
+    return lijst
+
+def move_over_given_time(lijst,max_offset,max_time):
+    lengte_lijst = len(lijst)
+
+    for h in range(max_time):
+        print( str(h+1) + '/' + str(max_time) + ' seconden')
+        for i in range(lengte_lijst):   
+            rotatie = random.randrange(0,360)
+            offset = random.randrange(0,max_offset*10)/10
+            lijst[i].move(offset,rotatie)
+        print_lijst(lijst,10)
+        time.sleep(1)
+
+    return lijst
 
 
-
-
-robot_lijst = maak_robot_lijst(16)
-robot_lijst = maak_grid(robot_lijst,4)
+robot_lijst = maak_robot_lijst(100)
+robot_lijst = maak_grid(robot_lijst,1)
 robot_lijst = random_offset(robot_lijst,1)
-
-for i in range(len(robot_lijst)):
-    print(robot_lijst[i].get_location(), i + 1)
+robot_lijst = move_robots(robot_lijst,10,30)
+robot_lijst = move_over_given_time(robot_lijst,1,20)
 
 
 
