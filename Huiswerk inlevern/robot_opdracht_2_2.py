@@ -13,6 +13,7 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 class Robot:
     """Robot class for 2D robot objects."""
 
@@ -167,22 +168,50 @@ def move_over_given_time(lijst,max_offset,max_time):
 
     return lijst
 
+def lijst_naar_numpy(lijst):
+    x = []
+    y = []
+    u = []
+    v = []
+
+    for i in range(len(lijst)):
+        x.append(lijst[i].get_x())
+        y.append(lijst[i].get_y())
+        u.append(math.cos(lijst[i].get_orientation()))
+        v.append(math.sin(lijst[i].get_orientation()))
+
+    numpy_array = np.array([x,y,u,v])
+    return numpy_array
+
+
 
 robot_lijst = maak_robot_lijst(100)
 robot_lijst = maak_grid(robot_lijst,1)
-robot_lijst = random_offset(robot_lijst,1)
-robot_lijst = move_robots(robot_lijst,10,30)
+robot_lijst = random_offset(robot_lijst,0.1)
+#robot_lijst = move_robots(robot_lijst,10,30)
 
 max_offset = 5
+numy_array = lijst_naar_numpy(robot_lijst)
+
+plt.ion()
+fig, ax = plt.subplots()
+q = ax.quiver(numy_array[0], numy_array[1], numy_array[2], numy_array[3])
 #minder elegant maar het werkt nu wel
 for h in range(20):
     print( str(h+1) + '/' + str(20) + ' seconden')
     for i in range(len(robot_lijst)):   
+
         rotatie = random.randrange(0,360)
         offset = random.randrange(0,max_offset*10)/10
+
         robot_lijst[i].move(offset,rotatie)
+
+    numy_array = lijst_naar_numpy(robot_lijst)
+    
+    q = ax.quiver(numy_array[0], numy_array[1], numy_array[2], numy_array[3])
+    
     print_lijst(robot_lijst,10)
     time.sleep(1)
-
+    
 
 
