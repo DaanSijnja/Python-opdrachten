@@ -10,6 +10,9 @@ import math
 import random
 import time
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 class Robot:
     """Robot class for 2D robot objects."""
 
@@ -148,6 +151,8 @@ def move_robots(lijst,distance, orientation):
 
     return lijst
 
+
+#dit werkt niet want het word pas op het laatst geupdate
 def move_over_given_time(lijst,max_offset,max_time):
     lengte_lijst = len(lijst)
 
@@ -167,9 +172,17 @@ robot_lijst = maak_robot_lijst(100)
 robot_lijst = maak_grid(robot_lijst,1)
 robot_lijst = random_offset(robot_lijst,1)
 robot_lijst = move_robots(robot_lijst,10,30)
-robot_lijst = move_over_given_time(robot_lijst,1,20)
 
-
+max_offset = 5
+#minder elegant maar het werkt nu wel
+for h in range(20):
+    print( str(h+1) + '/' + str(20) + ' seconden')
+    for i in range(len(robot_lijst)):   
+        rotatie = random.randrange(0,360)
+        offset = random.randrange(0,max_offset*10)/10
+        robot_lijst[i].move(offset,rotatie)
+    print_lijst(robot_lijst,10)
+    time.sleep(1)
 
 
 
