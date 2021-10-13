@@ -191,13 +191,23 @@ robot_lijst = random_offset(robot_lijst,0.1)
 max_offset = 5
 numy_array = lijst_naar_numpy(robot_lijst)
 
-
+plt.ion()
 fig, ax = plt.subplots()
-q = ax.quiver(numy_array[0], numy_array[1], numy_array[2], numy_array[3])
 plt.show()
-#minder elegant maar het werkt nu wel
 
-
+for h in range(20):
+    print( str(h+1) + '/' + str(20) + ' seconden')
+    numpy_array = lijst_naar_numpy(robot_lijst)
+    q = ax.quiver(numpy_array[0], numpy_array[1], numpy_array[2], numpy_array[3])
+    fig.canvas.draw()  
+    plt.pause(0.1)  
+    ax.cla() 
+    for i in range(len(robot_lijst)):   
+        rotatie = 0
+        offset = 0.1
+        robot_lijst[i].forward(offset)
+    print_lijst(robot_lijst,10)
+    time.sleep(1)
     
 
 
