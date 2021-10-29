@@ -170,8 +170,9 @@ def move_over_given_time(lijst,max_offset,max_time):
 
 
 
-'''numpy3d naar quiver coordinaten voor de mathplotlib'''
+
 def numpy_naar_quiver(lijst):
+    '''numpy3d naar quiver coordinaten voor de mathplotlib'''
     x,y,u,v = [],[],[],[]
     
     for i in range(len(lijst)):
@@ -184,8 +185,9 @@ def numpy_naar_quiver(lijst):
     return quiver_lijst
 
 
-'''in deze functie maken we een lijst van de robots en verplaatsen we deze ook'''
+
 def numpy_3d(robot_lijst,seconden):
+    '''in deze functie maken we een lijst van de robots en verplaatsen we deze ook'''
     lengte_robot_lijst = len(robot_lijst)
     numpy_3d_array = []
 
@@ -204,37 +206,45 @@ def numpy_3d(robot_lijst,seconden):
     numpy_3d_array = np.asarray(numpy_3d_array)
     return robot_lijst, numpy_3d_array
 
+def doe_berekening_op_lijst(lijst,functie):
+    '''hier mag je alleen de np.std en de np.mean functie in stoppen'''
+    X_berekend = functie(lijst[0])
+    Y_berekend = functie(lijst[1])
+    U_berekend = functie(lijst[2])
+    V_berekend = functie(lijst[3])
+    uitkomst_array = np.array([X_berekend,Y_berekend,U_berekend,V_berekend])
+    return uitkomst_array
 
 
+SEC = 20
 robot_lijst = maak_robot_lijst(100)
 robot_lijst = maak_grid(robot_lijst,1)
 robot_lijst = random_offset(robot_lijst,0.1)
 
-robot_lijst, numpy3d = numpy_3d(robot_lijst,3)
-
-print(numpy_naar_quiver(numpy3d[0]))
+robot_lijst, numpy3d = numpy_3d(robot_lijst,SEC)
 
 
-#plt.ion()
-#fig, ax = plt.subplots()
-#plt.show()
-#
 
+plt.ion()
+fig, ax = plt.subplots()
+plt.show()
 
-'''
-for h in range(20):
-    print( str(h+1) + '/' + str(20) + ' seconden')
-    numpy_array = lijst_naar_numpy(robot_lijst)
-    q = ax.quiver(numpy_array[0], numpy_array[1], numpy_array[2], numpy_array[3])
-    ax.quiverkey(q, X=0.3, Y=1.1, U=10, label=('tijd: ' + str(h) + 'sec'), labelpos='E')
+for tijdstip in range(SEC):
+    quiver_array = numpy_naar_quiver(numpy3d[tijdstip])
+    print( str(tijdstip+1) + '/' + str(SEC) + ' seconden')
+    mean = doe_berekening_op_lijst(quiver_array,np.mean)
+    st_deviatie = doe_berekening_op_lijst(quiver_array,np.std)
+
+    print(f'Gemiddelde: X:{round(mean[0],2)} Y:{round(mean[1],2)} U: {round(mean[2],2)} V:{round(mean[3],2)}')
+    print(f'Standaard Deviatie: X:{round(st_deviatie[0],2)} Y:{round(st_deviatie[1],2)} U: {round(st_deviatie[2],2)} V:{round(st_deviatie[3],2)}')
+    
+    q = ax.quiver(quiver_array[0], quiver_array[1], quiver_array[2], quiver_array[3])
+    ax.quiverkey(q, X=0.3, Y=1.1, U=10, label=('tijd: ' + str(tijdstip) + 'sec'), labelpos='E')
+
     fig.canvas.draw()  
     plt.pause(0.1)  
     ax.cla() 
-    for i in range(len(robot_lijst)):   
-        offset = 0.1
-        robot_lijst[i].forward(offset)
-    print_lijst(robot_lijst,10)
     time.sleep(1)
-'''
+
 
 
