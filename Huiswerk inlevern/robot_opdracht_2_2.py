@@ -168,46 +168,73 @@ def move_over_given_time(lijst,max_offset,max_time):
 
     return lijst
 
-def lijst_naar_numpy(lijst):
-    x = []
-    y = []
-    u = []
-    v = []
 
+
+'''numpy3d naar quiver coordinaten voor de mathplotlib'''
+def numpy_naar_quiver(lijst):
+    x,y,u,v = [],[],[],[]
+    
     for i in range(len(lijst)):
-        x.append(lijst[i].get_x())
-        y.append(lijst[i].get_y())
-        u.append(math.cos(lijst[i].get_orientation()))
-        v.append(math.sin(lijst[i].get_orientation()))
+        x.append(lijst[i][0])
+        y.append(lijst[i][1])
+        u.append(lijst[i][2])
+        v.append(lijst[i][3])
 
-    numpy_array = np.array([x,y,u,v])
-    return numpy_array
+    quiver_lijst = np.array([x,y,u,v])
+    return quiver_lijst
+
+
+'''in deze functie maken we een lijst van de robots en verplaatsen we deze ook'''
+def numpy_3d(robot_lijst,seconden):
+    lengte_robot_lijst = len(robot_lijst)
+    numpy_3d_array = []
+
+    for tijdstip in range(seconden):
+        t = []
+        for robot in range(lengte_robot_lijst):
+            X = robot_lijst[robot].get_x()
+            Y = robot_lijst[robot].get_y()
+            U = math.cos(robot_lijst[robot].get_orientation())
+            V = math.sin(robot_lijst[robot].get_orientation())
+            
+            t.append([X,Y,U,V])
+            robot_lijst[robot].forward(0.1)
+        numpy_3d_array.append(t)
+
+    numpy_3d_array = np.asarray(numpy_3d_array)
+    return robot_lijst, numpy_3d_array
 
 
 
 robot_lijst = maak_robot_lijst(100)
 robot_lijst = maak_grid(robot_lijst,1)
 robot_lijst = random_offset(robot_lijst,0.1)
-max_offset = 5
-numy_array = lijst_naar_numpy(robot_lijst)
 
-plt.ion()
-fig, ax = plt.subplots()
-plt.show()
+robot_lijst, numpy3d = numpy_3d(robot_lijst,3)
 
+print(numpy_naar_quiver(numpy3d[0]))
+
+
+#plt.ion()
+#fig, ax = plt.subplots()
+#plt.show()
+#
+
+
+'''
 for h in range(20):
     print( str(h+1) + '/' + str(20) + ' seconden')
     numpy_array = lijst_naar_numpy(robot_lijst)
     q = ax.quiver(numpy_array[0], numpy_array[1], numpy_array[2], numpy_array[3])
+    ax.quiverkey(q, X=0.3, Y=1.1, U=10, label=('tijd: ' + str(h) + 'sec'), labelpos='E')
     fig.canvas.draw()  
     plt.pause(0.1)  
     ax.cla() 
     for i in range(len(robot_lijst)):   
-        rotatie = 0
         offset = 0.1
         robot_lijst[i].forward(offset)
     print_lijst(robot_lijst,10)
     time.sleep(1)
-    
+'''
 
 

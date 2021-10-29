@@ -20,7 +20,7 @@ x = np.linspace(0,3*wavelength,100) # points in space
 
 # When you are not using spyder, and see that plt.show() is blocking
 # you have to command matplotlib to be non-blocking, you can do this by uncommenting next line:
-plt.ion()
+# plt.ion()
 # which turns on the interactive mode, you can turn it off with plt.ioff().
 fig, ax = plt.subplots() # create a figure with an axis object
 plt.show()               # directly show the figure
