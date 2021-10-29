@@ -6,6 +6,8 @@ Sciences.
 Creation date: 25/08/2021
 License: GNU General Public License (GNU GPLv3)
 """
+
+#gemaakt door Daan Sijnja 20177747
 import math 
 import random
 import time
@@ -90,13 +92,14 @@ class Robot:
 
 
 def distance_between_two_robots(r_1,r_2):
- 
+    '''afstand tussen 2 robots berekenen'''
     diff_x = r_1.get_x() - r_2.get_x()
     diff_y = r_1.get_y() - r_2.get_y()
 
     return math.sqrt(diff_x**2 + diff_y**2)
 
 def maak_robot_lijst(aantal_robots):
+    '''maak een lijst van robots met aantal_robots als het aantal robots dat je wil hebben'''
     lijst = []
 
     for i in range(aantal_robots):
@@ -106,6 +109,7 @@ def maak_robot_lijst(aantal_robots):
     return lijst
 
 def maak_grid(lijst,distance):
+    '''hier een logische fucntie voor het maken van een grid waarbij hij het aantal robots in een netjes grid zet'''
     lengte_lijst = len(lijst)
     lengte_zijde = math.ceil(math.sqrt(lengte_lijst))
 
@@ -125,6 +129,7 @@ def maak_grid(lijst,distance):
     return lijst
 
 def random_offset(lijst,max_offset):
+    '''geef aan alle robots een random offset'''
     lengte_lijst = len(lijst)
 
     for i in range(lengte_lijst):
@@ -135,6 +140,10 @@ def random_offset(lijst,max_offset):
     
     return lijst
 
+
+#deze functies worden niet meer gebruikt
+
+'''
 def print_lijst(lijst,aantal = None):
     lengte_lijst = len(lijst)
 
@@ -167,10 +176,7 @@ def move_over_given_time(lijst,max_offset,max_time):
         time.sleep(1)
 
     return lijst
-
-
-
-
+'''
 def numpy_naar_quiver(lijst):
     '''numpy3d naar quiver coordinaten voor de mathplotlib'''
     x,y,u,v = [],[],[],[]
@@ -183,8 +189,6 @@ def numpy_naar_quiver(lijst):
 
     quiver_lijst = np.array([x,y,u,v])
     return quiver_lijst
-
-
 
 def numpy_3d(robot_lijst,seconden):
     '''in deze functie maken we een lijst van de robots en verplaatsen we deze ook'''
@@ -215,7 +219,7 @@ def doe_berekening_op_lijst(lijst,functie):
     uitkomst_array = np.array([X_berekend,Y_berekend,U_berekend,V_berekend])
     return uitkomst_array
 
-
+#20 seconden 
 SEC = 20
 robot_lijst = maak_robot_lijst(100)
 robot_lijst = maak_grid(robot_lijst,1)
@@ -224,12 +228,13 @@ robot_lijst = random_offset(robot_lijst,0.1)
 robot_lijst, numpy3d = numpy_3d(robot_lijst,SEC)
 
 
-
+#de mathplotlib gebruiken
 plt.ion()
 fig, ax = plt.subplots()
 plt.show()
 
 for tijdstip in range(SEC):
+
     quiver_array = numpy_naar_quiver(numpy3d[tijdstip])
     print( str(tijdstip+1) + '/' + str(SEC) + ' seconden')
     mean = doe_berekening_op_lijst(quiver_array,np.mean)
@@ -245,6 +250,3 @@ for tijdstip in range(SEC):
     plt.pause(0.1)  
     ax.cla() 
     time.sleep(1)
-
-
-
