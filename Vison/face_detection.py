@@ -4,14 +4,13 @@ import os
 import numpy
 
 #load image
-image_path = "Vision/test.png"
+image_path = 'Vison/logo.jpg'
 
 
 image = cv.imread(image_path,cv.IMREAD_COLOR)
-print(os.path.isfile(image_path))
+#print(os.path.isfile(image_path))
 
 # cv.imshow("Image", image)
-'''
 #convert image to grayscale image
 gray_image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
 
@@ -24,9 +23,9 @@ face_cords = harr_cascade.detectMultiScale(gray_image, scaleFactor=1.1, minNeigh
 
 for x, y, w, h in face_cords:
     cv.rectangle(image, (x,y), (x+w, y+h), (255, 0,0), thickness=2)
+    cv.line(image,(10,10),(100,100),(255,0,0),2)
 
 #show image
 cv.imshow("Face Detect", image)
 
 cv.waitKey(0)
-'''
