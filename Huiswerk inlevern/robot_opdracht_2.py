@@ -113,6 +113,7 @@ def geef_locatie(lijst):
             lijst[index]._pose[1] = j*10 - 50
             index += 1
 
+
 def maak_lijst(lijst_grote):
     robot_lijst = []
     for i in range(lijst_grote):
