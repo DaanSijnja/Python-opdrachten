@@ -33,7 +33,7 @@ def draw_aruco_marker(image,markercorners,ids):
 
 def draw_aumgented(bbox,ids,image):
 
-	imgout = np.zeros((570,870),dtype = "float32")
+	imgout = np.zeros((210,870),dtype = "uint8")
 
 
 	if(len(ids) < 4):
@@ -41,13 +41,13 @@ def draw_aumgented(bbox,ids,image):
 
 	for id in range(len(ids)):
 		if(ids[id] == 100):
-			lt = (int(bbox[id][0][0][0]),int(bbox[id][0][0][1]))
+			lt = (int(bbox[id][0][3][0]),int(bbox[id][0][3][1]))
 		if(ids[id] == 101):
-			rt = (int(bbox[id][0][1][0]),int(bbox[id][0][1][1]))
+			rt = (int(bbox[id][0][2][0]),int(bbox[id][0][2][1]))
 		if(ids[id] == 102):
-			lb = (int(bbox[id][0][2][0]),int(bbox[id][0][2][1]))
+			lb = (int(bbox[id][0][1][0]),int(bbox[id][0][1][1]))
 		if(ids[id] == 103):
-			rb = (int(bbox[id][0][3][0]),int(bbox[id][0][3][1]))
+			rb = (int(bbox[id][0][0][0]),int(bbox[id][0][0][1]))
 	
 	h, w = imgout.shape
 	pts1 = np.array([lt,rt,lb,rb])
@@ -62,7 +62,18 @@ def draw_aumgented(bbox,ids,image):
 
 	return imgout
 
+
+def create_contour_image(image, thres_min = 120, thres_max = 255):
+	gray = cv.cvtColor(image,cv.COLOR_RGB2GRAY)
+	blur = cv.GaussianBlur(gray,(1,1),1000)
+	flag, thres = cv.threshold(blur,thres_min,thres_max,cv.THRESH_BINARY)
+	return thres
+
+
 cap = cv.VideoCapture(1)
+
+cap.set(cv.CAP_PROP_FRAME_WIDTH, 1270)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
 dictionary = cv.aruco.Dictionary_get(cv.aruco.DICT_4X4_250)
 parameters =  cv.aruco.DetectorParameters_create()
 frame = 0
@@ -70,19 +81,21 @@ frame = 0
 while 1:
 	ret, img = cap.read()
 	
-	gif_frame = frame % 32
-
 	found_markers = find_aruco(img)
-	imgout = np.zeros((870,570),dtype = "float32")
-	if(len(found_markers[0]) != 0):
+	imgout = np.zeros((210,870),dtype = "uint8")
+	img_gray = imgout
+	if(len(found_markers[0]) >= 4):
 		imgout = draw_aumgented(found_markers[0],found_markers[1],img)
-		#mrk = find_aruco(imgout)
-		#draw_aruco_marker(imgout,mrk[0],mrk[1])
+		img_thres = create_contour_image(imgout)
+		cv.imshow('out',imgout)
+		cv.imshow('gray',img_thres)
+
+	
 	
 
 	cv.imshow('img',img)
-	cv.imshow('out',imgout)
-	#cv.imshow('rest',test)
+	
+
 	k = cv.waitKey(30) & 0xff
 	if (k == 27):
 		break

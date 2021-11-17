@@ -92,7 +92,7 @@ while 1:
 	k = cv.waitKey(30) & 0xff
 	if (k == 27):
 		break
-
+	
 	frame += 1
 	
 # Close the window
