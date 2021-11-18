@@ -33,7 +33,7 @@ def draw_aruco_marker(image,markercorners,ids):
 
 def draw_aumgented(bbox,ids,image):
 
-	imgout = np.zeros((210,870),dtype = "uint8")
+	imgout = np.zeros((442,870),dtype = "uint8")
 
 
 	if(len(ids) < 4):
@@ -44,9 +44,9 @@ def draw_aumgented(bbox,ids,image):
 			lt = (int(bbox[id][0][3][0]),int(bbox[id][0][3][1]))
 		if(ids[id] == 101):
 			rt = (int(bbox[id][0][2][0]),int(bbox[id][0][2][1]))
-		if(ids[id] == 102):
-			lb = (int(bbox[id][0][1][0]),int(bbox[id][0][1][1]))
 		if(ids[id] == 103):
+			lb = (int(bbox[id][0][1][0]),int(bbox[id][0][1][1]))
+		if(ids[id] == 102):
 			rb = (int(bbox[id][0][0][0]),int(bbox[id][0][0][1]))
 	
 	h, w = imgout.shape
@@ -63,38 +63,53 @@ def draw_aumgented(bbox,ids,image):
 	return imgout
 
 
-def create_contour_image(image, thres_min = 120, thres_max = 255):
-	gray = cv.cvtColor(image,cv.COLOR_RGB2GRAY)
-	blur = cv.GaussianBlur(gray,(1,1),1000)
-	flag, thres = cv.threshold(blur,thres_min,thres_max,cv.THRESH_BINARY)
-	return thres
+def create_contour_image(image, thres_min = 85, thres_max = 255):
+	img_gray = cv.cvtColor(image,cv.COLOR_RGB2GRAY)
+	img_blur = cv.GaussianBlur(img_gray, (5, 5), 0)
+	img_canny = cv.Canny(img_blur,thres_min,thres_max)
+	kernel = np.ones((5, 5), np.uint8)
+	img_dilate = cv.dilate(img_canny, kernel, iterations=1)
+
+	return img_dilate
+
+def find_contours(image):
+	contours = cv.findContours(image,cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+	contours = contours[0] if len(contours) == 2 else contours[1]
+	return contours
+
+def find_by_color(image,min_range,max_range):
+	hsv = cv.cvtColor(image, cv.COLOR_RGB2HSV)
+	mask = cv.inRange(hsv, min_range, max_range)
+	cv.imshow('screen', mask)
 
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(0)
 
-cap.set(cv.CAP_PROP_FRAME_WIDTH, 1270)
-cap.set(cv.CAP_PROP_FRAME_HEIGHT, 720)
+cap.set(cv.CAP_PROP_FRAME_WIDTH, 1080)
+cap.set(cv.CAP_PROP_FRAME_HEIGHT, 810)
 dictionary = cv.aruco.Dictionary_get(cv.aruco.DICT_4X4_250)
 parameters =  cv.aruco.DetectorParameters_create()
-frame = 0
+
 
 while 1:
 	ret, img = cap.read()
 	
 	found_markers = find_aruco(img)
 	imgout = np.zeros((210,870),dtype = "uint8")
+	#img_cir = create_contour_image(img)
 	img_gray = imgout
 	if(len(found_markers[0]) >= 4):
 		imgout = draw_aumgented(found_markers[0],found_markers[1],img)
-		img_thres = create_contour_image(imgout)
+		find_by_color(imgout,np.array([170, 10, 0]),np.array([255, 40, 255]))
+		
 		cv.imshow('out',imgout)
-		cv.imshow('gray',img_thres)
+		
 
 	
 	
 
 	cv.imshow('img',img)
-	
+	#cv.imshow('test',img_cir)
 
 	k = cv.waitKey(30) & 0xff
 	if (k == 27):
