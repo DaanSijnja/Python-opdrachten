@@ -2,7 +2,7 @@
 import cv2
 
 # Lees een foto in (grijswaarden)
-img = cv2.imread('Kroatie_grijs.jpg', 0)
+img = cv2.imread('Practicum\Week 3\Kroatie_grijs.jpg', 0)
 #mg = cv2.resize(img, (800, 600)) 
 
 rows,cols = img.shape[:2]
