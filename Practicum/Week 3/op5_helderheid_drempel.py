@@ -18,6 +18,7 @@ img_helderheid = helderheid_drempel(image.copy(),30,200)
 cv.imshow('orignieel',image)
 cv.imshow('Helderheid aangepast',img_helderheid )
 
+cv.imwrite('Helderheidaangepast.jpg',img_helderheid)
 
 while True: 
     key = cv.waitKey(30)

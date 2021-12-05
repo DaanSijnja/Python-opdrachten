@@ -31,7 +31,7 @@ def drempel(img,waarde):
     for i in range(h):
         for j in range(w):
             p = img[i,j]
-            img[i,j] = (p < waarde)*255
+            img[i,j] = (p > waarde)*255
 
     return img
 
