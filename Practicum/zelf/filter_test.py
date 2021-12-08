@@ -73,16 +73,61 @@ def kernel_gem(img,kernel,i,j):
     return pixel                                                            # return pixel
 
 
+def kernel_mean(img,kernel,i,j):    
+    '''
+        @Input:
+            img: Een image matrix
+
+            kernel: Matrix waarmee de convolutie uitgevoerd moet worden
+
+            i, j: image coordinaten
+
+        @Return:
+            pixel: De waarde van de pixel op de locatie i,j
+
+
+        @Description:
+            Deze functie pakt het gemiddelde van de pixels met een kernel
+
+    '''                         
+    h, w = kernel.shape                                                     
+    kernel_size = h*w                                                       
+
+    img_snippet = kernel_snippet(img,(h,w),i,j)                            
+                                                       
+    pixel_mean = [[],[],[]]                                                     
+
+    for i in range(h):                                                      
+        for j in range(w):
+            for l in range(3):
+                a = img_snippet[i,j,l]                                                                                       
+                pixel_mean[l].append(a)              
+
+    b = [0,0,0]
+    for k in range(3):
+        b[k] = round(np.mean(pixel_mean[k]))
+
+
+    
+    #print(b)
+
+    return b
+
+
 
 
 def convolutie(img, kernel,mode):
     '''
         @Input:
-            img:
+            img: De afbeelding waar de convolutie op toegepast worden
 
-            kernel:
+            kernel: De kernel matrix die gebruikt moet worden
 
-            mode:
+            mode: Er zijn verschillende modus om uit te voeren
+                -kernel_gem : bereken het gemiddelde
+                -kernel_mean : pak de mean
+                -kernel_min : pak de laagste waarde
+                -kernel_max : pak de hoogste waarde
 
         @Return:
             imgcopy:
@@ -91,40 +136,37 @@ def convolutie(img, kernel,mode):
             Deze funtie voer convolutie uit met een image en een kernel op de geselecteerde modes 
     '''
 
-    h_img, w_img, c = img.shape
+    h_img, w_img, c = img.shape                                             # pak de Height en Width uit de img
     
-    imgcopy = img.copy()
+    imgcopy = img.copy()                                                    # maak een kopie van de afbeelding
 
-    for i in range(h_img):
-        pers = ((i+1)/h_img)*100
+    for i in range(h_img):                                                  # i gaat van 0 naar de img Height
+        pers = round(((i+1)/h_img)*100,1)                                   # bereken op hoeveel procent het programma is
 
-        if(pers % 5 == 0.0):
-            print('percent done:',int(pers))
-        for j in range(w_img):
-            pixel = kernel_gem(img,kernel,i,j)
-            imgcopy[i,j] = pixel
+        if(pers % 5 == 0.0):                                                # print elke 5% het persentage uit
+            print('percent done:',int(pers),'%')                             
+        for j in range(w_img):                                              # j gaat van 0 naar img Width
+            pixel = mode(img,kernel,i,j)                                    # voer de modus uit
+            imgcopy[i,j] = pixel                                            # maak de imgcopy pixel de nieuwe pixel
     
-    return imgcopy
+    return imgcopy                                                          # return imgcopy
 
 
-
-
-kernel = np.array(
+kernel = np.array(                                                          # de kernel matrix
         [
-        [1,1,1],
-        [1,1,1],
-        [1,1,1]
+        [1,1],
+        [1,1]
         ]
         ) 
 
         
 
 
-image = cv.imread('Practicum\zelf\R.jpg',cv.IMREAD_ANYCOLOR)
+image = cv.imread('Practicum\zelf\R.jpg',cv.IMREAD_ANYCOLOR)                # lees de afbeelding uit
 
-new_img = convolutie(image,kernel,'gem')
+new_img = convolutie(image,kernel,kernel_mean)                              # voer conculutie uit
 
-cv.imshow('kleurkaartje',new_img)
-cv.imwrite('Practicum\zelf\Ra.jpg',new_img)
-cv.waitKey(0)
-cv.destroyAllWindows()
+cv.imshow('kleurkaartje',new_img)                                           # laat het plaatje zin
+cv.imwrite('Practicum\zelf\Ra.jpg',new_img)                                 # sla het plaatje op
+cv.waitKey(0)                                                               # wacht op de ESC key
+cv.destroyAllWindows()                                                      # sluit alles op
