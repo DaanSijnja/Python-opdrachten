@@ -107,10 +107,6 @@ def kernel_mean(img,kernel,i,j):
     for k in range(3):
         b[k] = round(np.mean(pixel_mean[k]))
 
-
-    
-    #print(b)
-
     return b
 
 
