@@ -125,6 +125,9 @@ while 1:
 	ret, img = cap.read()
 	
 	found_markers = find_aruco(img)
+
+	draw_aruco_marker(img,found_markers[0],found_markers[1])
+
 	imgout = np.zeros((210,870),dtype = "uint8")
 	#img_cir = create_contour_image(img)
 	img_gray = imgout

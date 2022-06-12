@@ -22,9 +22,16 @@ for i in range(rows):
     for j in range(cols):
         pixel = img[i,j]
 
+        if(check_color((255,0,0),pixel)):
+            aantal_b += 1
+        
+        if(check_color((0,255,0),pixel)):
+            aantal_g += 1
+
+        if(check_color((0,0,255),pixel)):
+            aantal_r += 1
+
             
-
-
 print(aantal_r)
 print(aantal_g)
 print(aantal_b)

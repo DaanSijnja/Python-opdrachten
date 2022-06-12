@@ -23,7 +23,7 @@ def rgb_naar_hsv(rgb):
             HA = GA - RA + 4
 
         h = (HA) if (HA >= 0) else HA + 6
-        H = (1/6)*h*180
+        H = (1/6)*h*360
     else:
         S = 0.0
         H = 0.0
@@ -31,4 +31,4 @@ def rgb_naar_hsv(rgb):
     
     return H, S, V
 
-print(rgb_naar_hsv((127,127,0)))
+print(rgb_naar_hsv((18,141,255)))
