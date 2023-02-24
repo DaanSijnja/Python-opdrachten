@@ -64,7 +64,7 @@ def draw_aumgented(bbox,ids,image,imgAug):
 	return imgout
 
 cap = cv.VideoCapture(0)
-image_path = 'Vison/rick_asley/'
+image_path = 'Vision/rick_asley/'
 filename = 'giphy-'
 dictionary = cv.aruco.Dictionary_get(cv.aruco.DICT_4X4_250)
 parameters =  cv.aruco.DetectorParameters_create()

@@ -1,6 +1,6 @@
 import turtle
 bob = turtle.Turtle()
-bob.speed(10)
+bob.speed(1000)
 bob.penup()
 #bob.setx(-300)
 #bob.sety(300)
@@ -83,7 +83,7 @@ def draw_cross(t,n,lenght):
     
 
 bob.lt(90)
-draw_cross(bob,3,10)
+draw_triagle(bob,10,10)
     
 
 
