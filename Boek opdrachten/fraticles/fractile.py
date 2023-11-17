@@ -83,7 +83,7 @@ def draw_cross(t,n,lenght):
     
 
 bob.lt(90)
-draw_triagle(bob,10,10)
+draw_cross(bob,10,10)
     
 
 
